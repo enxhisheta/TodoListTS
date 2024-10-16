@@ -1,5 +1,4 @@
-import React from "react";
-import TaskItem from "./TaskItem";
+import { TaskItem } from "./TaskItem";
 
 interface Task {
   id: number;
@@ -39,4 +38,4 @@ const TaskList: React.FC<TaskListProps> = ({
   );
 };
 
-export default TaskList;
+export { TaskList };

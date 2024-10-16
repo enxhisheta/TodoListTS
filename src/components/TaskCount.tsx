@@ -12,4 +12,4 @@ const TaskCount: React.FC<TaskCountProps> = ({ title, count }) => {
     </div>
   );
 };
-export default TaskCount;
+export { TaskCount };

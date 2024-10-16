@@ -1,4 +1,4 @@
-import TaskManager from "./TaskManager";
+import { TaskManager } from "./TaskManager";
 import "./TodoList.css";
 
 const TodoList: React.FC = () => {
@@ -9,4 +9,4 @@ const TodoList: React.FC = () => {
   );
 };
 
-export default TodoList;
+export { TodoList };

@@ -1,4 +1,4 @@
-import Button from "./Button";
+import { Button } from "./Button";
 import { useState } from "react";
 
 interface Task {
@@ -56,4 +56,4 @@ const TaskItem: React.FC<TaskItemProps> = ({
   );
 };
 
-export default TaskItem;
+export { TaskItem };

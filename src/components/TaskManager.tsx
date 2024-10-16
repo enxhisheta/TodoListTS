@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
-import TaskList from "./TaskList";
-import TaskInput from "./TaskInput";
-import TaskCount from "./TaskCount";
+import { useState, useEffect, useCallback } from "react";
+import { TaskList } from "./TaskList";
+import { TaskInput } from "./TaskInput";
+import { TaskCount } from "./TaskCount";
 
 interface Task {
   id: number;
@@ -148,4 +148,4 @@ const TaskManager: React.FC = () => {
   );
 };
 
-export default TaskManager;
+export { TaskManager };

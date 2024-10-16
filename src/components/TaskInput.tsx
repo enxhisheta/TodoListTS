@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Button from "./Button";
+import { Button } from "./Button";
 
 interface TaskInputProps {
   onAddTask: (text: string) => void;
@@ -48,4 +48,4 @@ const TaskInput: React.FC<TaskInputProps> = ({
   );
 };
 
-export default TaskInput;
+export { TaskInput };
