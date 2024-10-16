@@ -1,10 +1,11 @@
-import InputField from "./InputField";
 import Button from "./Button";
+import { useState } from "react";
 
 interface Task {
   id: number;
-  text: string;
+  title: string;
   isEditing: boolean;
+  completed: boolean;
 }
 
 interface TaskItemProps {
@@ -12,8 +13,7 @@ interface TaskItemProps {
   onEditTask: (id: number) => void;
   onRemoveTask: (id: number) => void;
   onSaveTask: (id: number, text: string) => void;
-  editText: string;
-  setEditText: (text: string) => void;
+  onToggleCompletion: (id: number) => void;
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({
@@ -21,23 +21,33 @@ const TaskItem: React.FC<TaskItemProps> = ({
   onEditTask,
   onRemoveTask,
   onSaveTask,
-  editText,
-  setEditText,
+  onToggleCompletion,
 }) => {
+  const [editedText, setEditedText] = useState(task.title);
+
+  const handleSave = () => {
+    onSaveTask(task.id, editedText);
+  };
+
   return (
     <li>
       {task.isEditing ? (
         <>
-          <InputField
-            value={editText}
-            onChange={setEditText}
-            placeholder="Edit task"
+          <input
+            type="text"
+            value={editedText}
+            onChange={(e) => setEditedText(e.target.value)}
           />
-          <Button onClick={() => onSaveTask(task.id, editText)}>Save</Button>
+          <Button onClick={handleSave}>Save</Button>
         </>
       ) : (
         <>
-          <span>{task.text}</span>
+          <input
+            type="checkbox"
+            checked={task.completed}
+            onChange={() => onToggleCompletion(task.id)}
+          />{" "}
+          <span>{task.title}</span>
           <Button onClick={() => onEditTask(task.id)}>Edit</Button>
           <Button onClick={() => onRemoveTask(task.id)}>Remove</Button>
         </>

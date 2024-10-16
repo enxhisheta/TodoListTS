@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useCallback } from "react";
 import TaskList from "./TaskList";
 import TaskInput from "./TaskInput";
+import TaskCount from "./TaskCount";
 
 interface Task {
   id: number;
-  text: string;
+  title: string;
   isEditing: boolean;
+  completed: boolean;
 }
 
 const API_URL = "http://localhost:8080/todos";
 
 const TaskManager: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [editText, setEditText] = useState<string>("");
+  const [editTaskId, setEditTaskId] = useState<number | null>(null);
+  const [completedCount, setCompletedCount] = useState(0);
+  const [remainingCount, setRemainingCount] = useState(0);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -21,17 +25,26 @@ const TaskManager: React.FC = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data = await response.json();
+        const data: Task[] = await response.json();
         setTasks(data);
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
     };
+
     fetchTasks();
   }, []);
 
+  useEffect(() => {
+    const completed = tasks.filter((task) => task.completed).length;
+    const remaining = tasks.length - completed;
+
+    setCompletedCount(completed);
+    setRemainingCount(remaining);
+  }, [tasks]);
+
   const handleAddTask = useCallback(async (text: string) => {
-    const newTask = { text, isEditing: false };
+    const newTask = { title: text, isEditing: false, completed: false };
     try {
       const response = await fetch(API_URL, {
         method: "POST",
@@ -67,6 +80,7 @@ const TaskManager: React.FC = () => {
   }, []);
 
   const handleEditTask = useCallback((id: number) => {
+    setEditTaskId(id);
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === id ? { ...task, isEditing: true } : task
@@ -75,7 +89,7 @@ const TaskManager: React.FC = () => {
   }, []);
 
   const handleSaveTask = useCallback(async (id: number, text: string) => {
-    const updatedTask = { text, isEditing: false };
+    const updatedTask = { title: text, isEditing: false, completed: false };
     try {
       const response = await fetch(`${API_URL}/${id}`, {
         method: "PATCH",
@@ -91,26 +105,44 @@ const TaskManager: React.FC = () => {
 
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
-          task.id === id ? { ...task, text, isEditing: false } : task
+          task.id === id ? { ...task, title: text, isEditing: false } : task
         )
       );
-      setEditText("");
+      setEditTaskId(null);
     } catch (error) {
       console.error("Error saving task:", error);
     }
   }, []);
 
+  const handleToggleCompletion = useCallback((id: number) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
+  }, []);
+
   return (
     <div className="task-manager">
       <h2>To-Do List</h2>
-      <TaskInput onAddTask={handleAddTask} />
+      <TaskCount title="Completed Tasks" count={completedCount} />
+      <TaskCount title="Remaining Tasks" count={remainingCount} />
+      <TaskInput
+        onAddTask={handleAddTask}
+        editMode={editTaskId !== null}
+        currentText={
+          editTaskId !== null
+            ? tasks.find((task) => task.id === editTaskId)?.title
+            : ""
+        }
+        onSaveTask={handleSaveTask}
+      />
       <TaskList
         tasks={tasks}
         onEditTask={handleEditTask}
         onRemoveTask={handleRemoveTask}
         onSaveTask={handleSaveTask}
-        editText={editText}
-        setEditText={setEditText}
+        onToggleCompletion={handleToggleCompletion}
       />
     </div>
   );

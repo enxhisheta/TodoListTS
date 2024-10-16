@@ -1,9 +1,11 @@
+import React from "react";
 import TaskItem from "./TaskItem";
 
 interface Task {
   id: number;
-  text: string;
+  title: string;
   isEditing: boolean;
+  completed: boolean;
 }
 
 interface TaskListProps {
@@ -11,8 +13,7 @@ interface TaskListProps {
   onEditTask: (id: number) => void;
   onRemoveTask: (id: number) => void;
   onSaveTask: (id: number, text: string) => void;
-  editText: string;
-  setEditText: (text: string) => void;
+  onToggleCompletion: (id: number) => void;
 }
 
 const TaskList: React.FC<TaskListProps> = ({
@@ -20,8 +21,7 @@ const TaskList: React.FC<TaskListProps> = ({
   onEditTask,
   onRemoveTask,
   onSaveTask,
-  editText,
-  setEditText,
+  onToggleCompletion,
 }) => {
   return (
     <ul>
@@ -32,8 +32,7 @@ const TaskList: React.FC<TaskListProps> = ({
           onEditTask={onEditTask}
           onRemoveTask={onRemoveTask}
           onSaveTask={onSaveTask}
-          editText={editText}
-          setEditText={setEditText}
+          onToggleCompletion={onToggleCompletion}
         />
       ))}
     </ul>
