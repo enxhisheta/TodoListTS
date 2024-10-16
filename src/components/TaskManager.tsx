@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { TaskList } from "./TaskList";
-import { TaskInput } from "./TaskInput";
+import { Input } from "./Input";
 import { TaskCount } from "./TaskCount";
 
 interface Task {
@@ -127,7 +127,7 @@ const TaskManager: React.FC = () => {
       <h2>To-Do List</h2>
       <TaskCount title="Completed Tasks" count={completedCount} />
       <TaskCount title="Remaining Tasks" count={remainingCount} />
-      <TaskInput
+      <Input
         onAddTask={handleAddTask}
         editMode={editTaskId !== null}
         currentText={
