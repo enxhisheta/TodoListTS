@@ -1,6 +1,6 @@
 import { useReducer, useEffect, useCallback, useMemo, useState } from "react";
 import { TaskList } from "./TaskList";
-import { Input } from "./Input";
+import { TaskInput } from "./TaskInput";
 import { TaskCount } from "./TaskCount";
 
 import "./TodoList.css";
@@ -155,7 +155,7 @@ const TaskManager: React.FC = () => {
         <h2>To-Do List</h2>
         <TaskCount title="Completed Tasks" count={completedCount} />
         <TaskCount title="Remaining Tasks" count={remainingCount} />
-        <Input
+        <TaskInput
           onAddTask={handleAddTask}
           editMode={editTaskId !== null}
           currentText={

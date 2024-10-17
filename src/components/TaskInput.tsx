@@ -48,4 +48,4 @@ const TaskInput: React.FC<TaskInputProps> = ({
   );
 };
 
-export { TaskInput as Input };
+export { TaskInput };
