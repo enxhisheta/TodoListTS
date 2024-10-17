@@ -1,4 +1,4 @@
-import { TaskItem } from "./TaskItem";
+import { MemoizedTaskItem } from "./TaskItem";
 
 interface Task {
   id: number;
@@ -25,7 +25,7 @@ const TaskList: React.FC<TaskListProps> = ({
   return (
     <ul>
       {tasks.map((task) => (
-        <TaskItem
+        <MemoizedTaskItem
           key={task.id}
           task={task}
           onEditTask={onEditTask}

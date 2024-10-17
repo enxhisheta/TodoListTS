@@ -1,7 +1,8 @@
-import { useReducer, useEffect, useCallback, useState } from "react";
+import { useReducer, useEffect, useCallback, useMemo, useState } from "react";
 import { TaskList } from "./TaskList";
 import { Input } from "./Input";
 import { TaskCount } from "./TaskCount";
+
 import "./TodoList.css";
 
 interface Task {
@@ -51,10 +52,7 @@ const API_URL = "http://localhost:8080/todos";
 const TaskManager: React.FC = () => {
   const [tasks, dispatch] = useReducer(reducer, []);
   const [editTaskId, setEditTaskId] = useState<number | null>(null);
-  const [completedCount, setCompletedCount] = useState(0);
-  const [remainingCount, setRemainingCount] = useState(0);
 
-  // Fetch tasks from the API
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -72,13 +70,15 @@ const TaskManager: React.FC = () => {
     fetchTasks();
   }, []);
 
-  useEffect(() => {
-    const completed = tasks.filter((task) => task.completed).length;
-    const remaining = tasks.length - completed;
+  const completedCount = useMemo(
+    () => tasks.filter((task) => task.completed).length,
+    [tasks]
+  );
 
-    setCompletedCount(completed);
-    setRemainingCount(remaining);
-  }, [tasks]);
+  const remainingCount = useMemo(
+    () => tasks.length - completedCount,
+    [tasks, completedCount]
+  );
 
   const handleAddTask = useCallback(async (text: string) => {
     const newTask = { title: text, isEditing: false, completed: false };

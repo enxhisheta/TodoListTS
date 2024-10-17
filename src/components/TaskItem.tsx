@@ -1,5 +1,5 @@
 import { Button } from "./Button";
-import { useState } from "react";
+import { useState, memo } from "react";
 
 interface Task {
   id: number;
@@ -56,4 +56,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
   );
 };
 
-export { TaskItem };
+export const MemoizedTaskItem = memo(TaskItem, (prevProps, nextProps) => {
+  return (
+    prevProps.task.id === nextProps.task.id &&
+    prevProps.task.title === nextProps.task.title &&
+    prevProps.task.isEditing === nextProps.task.isEditing &&
+    prevProps.task.completed === nextProps.task.completed
+  );
+});
