@@ -1,9 +1,9 @@
-import { TodoList } from "./components/TodoList";
+import { TaskManager } from "./components/TaskManager";
 
 const App: React.FC = () => {
   return (
     <div>
-      <TodoList />
+      <TaskManager />
     </div>
   );
 };
