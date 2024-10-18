@@ -1,6 +1,6 @@
 interface ButtonProps {
   onClick: () => void;
-  children: React.ReactNode;
+  children: React.ReactNode; //a type that allows any valid React contet as children
   className?: string;
 }
 

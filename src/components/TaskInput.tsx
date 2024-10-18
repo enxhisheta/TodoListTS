@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo, useCallback } from "react";
 import { Button } from "./Button";
 
 interface TaskInputProps {
@@ -24,16 +24,19 @@ const TaskInput: React.FC<TaskInputProps> = ({
     }
   }, [editMode, currentText]);
 
-  const handleAdd = () => {
+  const handleAdd = useCallback(() => {
+    //useCallback to avoid unnecessary re-renders
     if (newTask.trim()) {
       if (editMode && onSaveTask) {
-        onSaveTask(1, newTask);
+        onSaveTask(1, newTask); // Placeholder for task ID
       } else {
         onAddTask(newTask);
       }
       setNewTask("");
     }
-  };
+  }, [newTask, editMode, onAddTask, onSaveTask]);
+
+  console.log("TaskInput rendered");
 
   return (
     <div>
@@ -48,4 +51,10 @@ const TaskInput: React.FC<TaskInputProps> = ({
   );
 };
 
-export { TaskInput };
+// Memoized TaskInput to avoid unnecessary re-renders
+export const MemoizedTaskInput = memo(TaskInput, (prevProps, nextProps) => {
+  return (
+    prevProps.editMode === nextProps.editMode &&
+    prevProps.currentText === nextProps.currentText
+  );
+});

@@ -1,6 +1,6 @@
 import { useReducer, useEffect, useCallback, useMemo, useState } from "react";
 import { TaskList } from "./TaskList";
-import { TaskInput } from "./TaskInput";
+import { MemoizedTaskInput } from "./TaskInput";
 import { TaskCount } from "./TaskCount";
 
 import "./TodoList.css";
@@ -68,7 +68,7 @@ const TaskManager: React.FC = () => {
     };
 
     fetchTasks();
-  }, []);
+  }, []); //run only once on mount
 
   const completedCount = useMemo(
     () => tasks.filter((task) => task.completed).length,
@@ -160,7 +160,7 @@ const TaskManager: React.FC = () => {
         <h2>To-Do List</h2>
         <TaskCount title="Completed Tasks" count={completedCount} />
         <TaskCount title="Remaining Tasks" count={remainingCount} />
-        <TaskInput
+        <MemoizedTaskInput
           onAddTask={handleAddTask}
           editMode={editTaskId !== null}
           currentText=""
