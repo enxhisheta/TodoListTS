@@ -1,4 +1,4 @@
-import { useState, useEffect, memo, useCallback } from "react";
+import { useEffect, useRef, memo } from "react";
 import { Button } from "./Button";
 
 interface TaskInputProps {
@@ -11,30 +11,35 @@ interface TaskInputProps {
 const TaskInput: React.FC<TaskInputProps> = ({
   onAddTask,
   onSaveTask,
-  editMode,
-  currentText,
+  editMode = false,
+  currentText = "",
 }) => {
-  const [newTask, setNewTask] = useState<string>("");
+  // Ref to store the task input
+  const newTaskRef = useRef<string>(currentText);
 
   useEffect(() => {
     if (editMode && currentText) {
-      setNewTask(currentText);
+      newTaskRef.current = currentText;
     } else {
-      setNewTask("");
+      newTaskRef.current = "";
     }
   }, [editMode, currentText]);
 
-  const handleAdd = useCallback(() => {
-    //useCallback to avoid unnecessary re-renders
-    if (newTask.trim()) {
+  const handleAdd = () => {
+    const taskValue = newTaskRef.current.trim();
+    if (taskValue) {
       if (editMode && onSaveTask) {
-        onSaveTask(1, newTask); // Placeholder for task ID
+        onSaveTask(1, taskValue); // Replace '1' with the real task ID
       } else {
-        onAddTask(newTask);
+        onAddTask(taskValue);
       }
-      setNewTask("");
+      newTaskRef.current = ""; // Clear the ref after adding/saving
     }
-  }, [newTask, editMode, onAddTask, onSaveTask]);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    newTaskRef.current = e.target.value;
+  };
 
   console.log("TaskInput rendered");
 
@@ -42,19 +47,21 @@ const TaskInput: React.FC<TaskInputProps> = ({
     <div>
       <input
         type="text"
-        value={newTask}
-        onChange={(e) => setNewTask(e.target.value)}
-        placeholder="Add a new task"
+        defaultValue={currentText} // Use defaultValue for initial input
+        onChange={handleChange}
+        placeholder={editMode ? "Edit task" : "Add a new task"}
       />
       <Button onClick={handleAdd}>{editMode ? "Save Task" : "Add Task"}</Button>
     </div>
   );
 };
 
-// Memoized TaskInput to avoid unnecessary re-renders
+// Memo to avoid re-render if props don’t change
 export const MemoizedTaskInput = memo(TaskInput, (prevProps, nextProps) => {
   return (
     prevProps.editMode === nextProps.editMode &&
-    prevProps.currentText === nextProps.currentText
+    prevProps.currentText === nextProps.currentText &&
+    prevProps.onAddTask === nextProps.onAddTask &&
+    prevProps.onSaveTask === nextProps.onSaveTask
   );
 });
