@@ -43,7 +43,7 @@ const reducer = (state: Task[], action: Action): Task[] => {
           : task
       );
     default:
-      throw new Error("Unknown action type");
+      throw new Error("Unknown action type" + action);
   }
 };
 
@@ -124,6 +124,11 @@ const TaskManager: React.FC = () => {
   }, []);
 
   const handleSaveTask = useCallback(async (id: number, text: string) => {
+    if (text.trim() === "") {
+      alert("Task title cannot be empty.");
+      return;
+    }
+
     const updatedTask = { title: text, isEditing: false, completed: false };
     try {
       const response = await fetch(`${API_URL}/${id}`, {
@@ -158,11 +163,7 @@ const TaskManager: React.FC = () => {
         <TaskInput
           onAddTask={handleAddTask}
           editMode={editTaskId !== null}
-          currentText={
-            editTaskId !== null
-              ? tasks.find((task) => task.id === editTaskId)?.title
-              : ""
-          }
+          currentText=""
           onSaveTask={handleSaveTask}
         />
         <TaskList
