@@ -14,7 +14,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
   editMode = false,
   currentText = "",
 }) => {
-  // Ref to store the task input
+  // useRef to store the task input
   const newTaskRef = useRef<string>(currentText);
 
   useEffect(() => {
@@ -29,11 +29,11 @@ const TaskInput: React.FC<TaskInputProps> = ({
     const taskValue = newTaskRef.current.trim();
     if (taskValue) {
       if (editMode && onSaveTask) {
-        onSaveTask(1, taskValue); // Replace '1' with the real task ID
+        onSaveTask(1, taskValue);
       } else {
         onAddTask(taskValue);
       }
-      newTaskRef.current = ""; // Clear the ref after adding/saving
+      newTaskRef.current = ""; // clears the ref after adding/saving
     }
   };
 
@@ -47,7 +47,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
     <div>
       <input
         type="text"
-        defaultValue={currentText} // Use defaultValue for initial input
+        defaultValue={currentText} // uses defaultValue for initial input
         onChange={handleChange}
         placeholder={editMode ? "Edit task" : "Add a new task"}
       />
@@ -56,7 +56,7 @@ const TaskInput: React.FC<TaskInputProps> = ({
   );
 };
 
-// Memo to avoid re-render if props don’t change
+// memo to avoid re-render if props don’t change
 export const MemoizedTaskInput = memo(TaskInput, (prevProps, nextProps) => {
   return (
     prevProps.editMode === nextProps.editMode &&
