@@ -51,7 +51,7 @@ const API_URL = "http://localhost:8080/todos";
 
 const TaskManager: React.FC = () => {
   const [tasks, dispatch] = useReducer(reducer, []);
-  const [editTaskId, setEditTaskId] = useState<number | null>(null); //managing the edit task id
+  const [editTaskId, setEditTaskId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -60,17 +60,16 @@ const TaskManager: React.FC = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        const data: Task[] = await response.json(); //data is converted into a JS object as array of Task objects
-        dispatch({ type: "SET_TASKS", tasks: data }); //dispatches an action to a reducer and the fetched tasks as playload
+        const data: Task[] = await response.json();
+        dispatch({ type: "SET_TASKS", tasks: data });
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
     };
 
     fetchTasks();
-  }, []); //run only once on mount
+  }, []);
 
-  //useMemo to memoize the completedCount and remainingCount to avoid recalculations
   const completedCount = useMemo(
     () => tasks.filter((task) => task.completed).length,
     [tasks]
@@ -81,7 +80,6 @@ const TaskManager: React.FC = () => {
     [tasks, completedCount]
   );
 
-  //useCallbacks to memoize handler functions to avoid unnecessary re-creation
   const handleAddTask = useCallback(async (text: string) => {
     const newTask = { title: text, isEditing: false, completed: false };
     try {
