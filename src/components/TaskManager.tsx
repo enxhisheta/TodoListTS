@@ -47,7 +47,7 @@ const reducer = (state: Task[], action: Action): Task[] => {
   }
 };
 
-const API_URL = "http://localhost:8080/todos";
+const API_URL = "http://localhost:3000/todos";
 
 const TaskManager: React.FC = () => {
   const [tasks, dispatch] = useReducer(reducer, []);
